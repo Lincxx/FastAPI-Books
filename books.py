@@ -40,6 +40,19 @@ async def read_category_by_query(category: str):
 
     return books_to_return
 
+# wqery parameters - ie http://localhost:8000/books/?author=author
+@app.get("/books/find_by_author/")
+async def read_author_by_query(book_author: str):
+    print('ddfs')
+    books_to_return = []
+
+    for book in BOOKS:
+        if book.get('author').casefold() == book_author.casefold():
+            books_to_return.append(book)
+
+    return books_to_return
+
+
 # path and query parameters - ie http://localhost:8000/books/author_name/?category=category
 @app.get("/books/{book_author}/")
 async def read_author_category_by_query(book_author: str, category: str):
@@ -52,6 +65,18 @@ async def read_author_category_by_query(book_author: str, category: str):
 
     return books_to_return
 
+# @app.get("/books/author/{book_author}")
+# async def read_author_by_path(book_author: str):
+#     books_to_return = []
+
+#     for book in BOOKS:
+#         if book.get('author').casefold() == book_author.casefold():
+#             books_to_return.append(book)
+
+#     return books_to_return
+
+
+
 @app.post("/books/create_book")
 async def create_book(new_book=Body(...)): #, it's a special syntax in FastAPI that indicates the parameter is required
     BOOKS.append(new_book)
@@ -62,3 +87,10 @@ async def update_book(updated_book=Body(...)):
     for book in BOOKS:
         if book.get('title').casefold() == updated_book.get('title').casefold():
             book.update(updated_book)
+
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title: str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
