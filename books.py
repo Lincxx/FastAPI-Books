@@ -55,3 +55,10 @@ async def read_author_category_by_query(book_author: str, category: str):
 @app.post("/books/create_book")
 async def create_book(new_book=Body(...)): #, it's a special syntax in FastAPI that indicates the parameter is required
     BOOKS.append(new_book)
+
+
+@app.put("/books/update_book")
+async def update_book(updated_book=Body(...)):
+    for book in BOOKS:
+        if book.get('title').casefold() == updated_book.get('title').casefold():
+            book.update(updated_book)
